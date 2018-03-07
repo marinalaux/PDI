@@ -8,7 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -106,6 +111,7 @@ public class PDI extends JFrame {
         JMenu menuArquivo = new JMenu("Arquivo");
         menuArquivo.setMnemonic(KeyEvent.VK_A);
         menuArquivo.add(createMenuArquivoAbrir());
+        menuArquivo.add(createMenuArquivoAbrirEspecial());
         menuArquivo.add(createMenuArquivoSalvarOriginal());
         menuArquivo.add(createMenuArquivoSalvarTransformada());
         menuArquivo.add(createMenuArquivoSairPrograma());
@@ -124,19 +130,75 @@ public class PDI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openImage();
-                if (originalImage != null) {
-                    leftPanel.setBorder(BorderFactory.createTitledBorder("Imagem original"));
-                    orignalImageLabel.setIcon(new ImageIcon(originalImage.toBufferedImage()));
-                    leftPanel.revalidate();
-                    leftPanel.repaint();
-                    rightPanel.removeAll();
-                    rightPanel.setBorder(null);
-                    rightPanel.revalidate();
-                    rightPanel.repaint();
-                }
+                refreshOriginalImagePanel();
             }
         });
         return arquivoAbrir;
+    }
+    
+    /**
+     * Cria submenu para abrir imagens específicas
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuArquivoAbrirEspecial() {
+        JMenu arquivoAbrirEspecial = new JMenu("Abrir especial");
+        arquivoAbrirEspecial.setMnemonic(KeyEvent.VK_E);
+        arquivoAbrirEspecial.add(createArquivoAbrirLena());
+        arquivoAbrirEspecial.add(createArquivoAbrirEye());
+        arquivoAbrirEspecial.add(createArquivoAbrirLandscape());
+        return arquivoAbrirEspecial;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem da Lena
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirLena() {
+        JMenuItem abrirLena = new JMenuItem("Lena");
+        abrirLena.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadImage(PDI.class.getResourceAsStream("/res/lena.png"));
+                refreshOriginalImagePanel();
+            }
+        });
+        return abrirLena;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem de olho
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirEye() {
+        JMenuItem abrirEye = new JMenuItem("Olho");
+        abrirEye.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadImage(PDI.class.getResourceAsStream("/res/eye.png"));
+                refreshOriginalImagePanel();
+            }
+        });
+        return abrirEye;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem de paisagem
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirLandscape() {
+        JMenuItem abrirLandscape = new JMenuItem("Paisagem");
+        abrirLandscape.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadImage(PDI.class.getResourceAsStream("/res/landscape.png"));
+                refreshOriginalImagePanel();
+            }
+        });
+        return abrirLandscape;
     }
 
     /**
@@ -232,7 +294,7 @@ public class PDI extends JFrame {
                 rightPanel.setLayout(new FlowLayout());
                 rightPanel.removeAll();
                 rightPanel.setBorder(BorderFactory.createTitledBorder("Estatísticas da imagem original"));
-                rightPanel.add(showOriginalImageStatistics());
+                rightPanel.add(showImageStatistics(originalImageStatistics));
                 rightPanel.revalidate();
                 rightPanel.repaint();
             }
@@ -290,13 +352,9 @@ public class PDI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
                 modifiedImage = Transformations.aboveAvgToWhite(originalImage, originalImageStatistics);
-                rightPanel.setLayout(new FlowLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
-                modifiedImageLabel.setIcon(new ImageIcon(modifiedImage.toBufferedImage()));
-                rightPanel.add(modifiedImageLabel);
-                rightPanel.revalidate();
-                rightPanel.repaint();
+                modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                modifiedImageStatistics.computeAll();
+                refreshModifiedImagePanel();
             }
         });
         return transformacoesAcimaMedia;
@@ -314,13 +372,9 @@ public class PDI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
                 modifiedImage = Transformations.belowMedianToBlack(originalImage, originalImageStatistics);
-                rightPanel.setLayout(new FlowLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
-                modifiedImageLabel.setIcon(new ImageIcon(modifiedImage.toBufferedImage()));
-                rightPanel.add(modifiedImageLabel);
-                rightPanel.revalidate();
-                rightPanel.repaint();
+                modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                modifiedImageStatistics.computeAll();
+                refreshModifiedImagePanel();
             }
         });
         return transformacoesAbaixoMediana;
@@ -338,13 +392,9 @@ public class PDI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
                 modifiedImage = Transformations.aboveModeToWhiteOthersBlack(originalImage, originalImageStatistics);
-                rightPanel.setLayout(new FlowLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
-                modifiedImageLabel.setIcon(new ImageIcon(modifiedImage.toBufferedImage()));
-                rightPanel.add(modifiedImageLabel);
-                rightPanel.revalidate();
-                rightPanel.repaint();
+                modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                modifiedImageStatistics.computeAll();
+                refreshModifiedImagePanel();
             }
         });
         return transformacoesModa;
@@ -362,13 +412,9 @@ public class PDI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
                 modifiedImage = Transformations.reversePixelsValue(originalImage);
-                rightPanel.setLayout(new FlowLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
-                modifiedImageLabel.setIcon(new ImageIcon(modifiedImage.toBufferedImage()));
-                rightPanel.add(modifiedImageLabel);
-                rightPanel.revalidate();
-                rightPanel.repaint();
+                modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                modifiedImageStatistics.computeAll();
+                refreshModifiedImagePanel();
             }
         });
         return transformacoesInverter;
@@ -417,14 +463,18 @@ public class PDI extends JFrame {
     private void openImage() {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            loadImage(fileChooser.getSelectedFile());
+            try {
+                loadImage(new FileInputStream(fileChooser.getSelectedFile()));
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
     /**
      * Carrega a imagem para manipulação
      */
-    private void loadImage(File file) {
+    private void loadImage(InputStream file) {
         try {
             BufferedImage imageFile = ImageIO.read(file);
             int height = imageFile.getHeight();
@@ -458,21 +508,75 @@ public class PDI extends JFrame {
     }
 
     /**
-     * Exibe estatísticas da imagem original
+     * Atualiza o painel com a imagem original
+     */
+    private void refreshOriginalImagePanel() {
+        if (originalImage != null) {
+            leftPanel.setBorder(BorderFactory.createTitledBorder("Imagem original"));
+            orignalImageLabel.setIcon(new ImageIcon(originalImage.toBufferedImage()));
+            leftPanel.revalidate();
+            leftPanel.repaint();
+            rightPanel.removeAll();
+            rightPanel.setBorder(null);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }
+    }
+
+    /**
+     * Atualiza o painel com a imagem modificada
+     */
+    private void refreshModifiedImagePanel() {
+        rightPanel.setLayout(new BorderLayout());
+        rightPanel.removeAll();
+        rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
+        rightPanel.add(showModifiedImage(), BorderLayout.CENTER);
+        rightPanel.add(createModifiedImageStatisticsPanel(), BorderLayout.SOUTH);
+        rightPanel.revalidate();
+        rightPanel.repaint();
+    }
+    
+    /**
+     * Exibe a imagem modificada
      * 
      * @return JComponent
      */
-    private JComponent showOriginalImageStatistics() {
+    private JComponent showModifiedImage() {
+        JPanel modifiedImagePanel = new JPanel();
+        modifiedImagePanel.setLayout(new FlowLayout());
+        modifiedImageLabel.setIcon(new ImageIcon(modifiedImage.toBufferedImage()));
+        modifiedImagePanel.add(modifiedImageLabel);
+        return modifiedImagePanel;
+    }
+    
+    /**
+     * Cria painel para exibir as estatísticas da imagem modificada
+     * 
+     * @return JComponent
+     */
+    private JComponent createModifiedImageStatisticsPanel() {
+        JPanel modifiedImagePanel = new JPanel();
+        modifiedImagePanel.setLayout(new FlowLayout());
+        modifiedImagePanel.add(showImageStatistics(modifiedImageStatistics));
+        return modifiedImagePanel;
+    }
+    
+    /**
+     * Exibe estatísticas da imagem
+     * 
+     * @return JComponent
+     */
+    private JComponent showImageStatistics(ImageStatistics statistics) {
         JPanel statisticsPanel = new JPanel();
         statisticsPanel.setLayout(new GridLayout(4, 2, 20, 0));
         statisticsPanel.add(new JLabel("Média:"));
-        statisticsPanel.add(new JLabel(String.valueOf(originalImageStatistics.computeMedia())));
+        statisticsPanel.add(new JLabel(String.valueOf(statistics.computeMedia())));
         statisticsPanel.add(new JLabel("Mediana:"));
-        statisticsPanel.add(new JLabel(String.valueOf(originalImageStatistics.computeMediana())));
+        statisticsPanel.add(new JLabel(String.valueOf(statistics.computeMediana())));
         statisticsPanel.add(new JLabel("Moda:"));
-        statisticsPanel.add(new JLabel(String.valueOf(originalImageStatistics.computeModa())));
+        statisticsPanel.add(new JLabel(String.valueOf(statistics.computeModa())));
         statisticsPanel.add(new JLabel("Variância:"));
-        statisticsPanel.add(new JLabel(String.valueOf(originalImageStatistics.computeVariancia())));
+        statisticsPanel.add(new JLabel(String.valueOf(statistics.computeVariancia())));
         return statisticsPanel;
     }
     

@@ -24,7 +24,7 @@ public class Image {
     public Image(int h, int w) {
         height = h;
         width = w;
-        pixels = new int[height][width];
+        pixels = new int[width][height];
     }
 
     public int getHeight() {

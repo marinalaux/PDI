@@ -37,10 +37,15 @@ public class ImageStatistics {
      * Calcula todas as estatísticas da imagem
      */
     public void computeAll() {
+        media = -1;
         computeMedia();
+        mediana = -1;
         computeMediana();
+        moda = -1;
         computeModa();
+        variancia = -1;
         computeVariancia();
+        histograma = null;
         loadHistograma();
     }
     
