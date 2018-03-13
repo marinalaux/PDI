@@ -12,8 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -291,12 +289,14 @@ public class PDI extends JFrame {
         estatisticaCalculos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rightPanel.setLayout(new FlowLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Estatísticas da imagem original"));
-                rightPanel.add(showImageStatistics(originalImageStatistics));
-                rightPanel.revalidate();
-                rightPanel.repaint();
+                if (originalImage != null) {
+                    rightPanel.setLayout(new FlowLayout());
+                    rightPanel.removeAll();
+                    rightPanel.setBorder(BorderFactory.createTitledBorder("Estatísticas da imagem original"));
+                    rightPanel.add(showImageStatistics(originalImageStatistics));
+                    rightPanel.revalidate();
+                    rightPanel.repaint();
+                }
             }
         });
         return estatisticaCalculos;
@@ -313,13 +313,14 @@ public class PDI extends JFrame {
         estatisticaHistograma.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rightPanel.setLayout(new BorderLayout());
-                rightPanel.removeAll();
-                rightPanel.setBorder(BorderFactory.createTitledBorder("Histograma da imagem original"));
-                rightPanel.add(createHistograma());
-                rightPanel.revalidate();
-                rightPanel.repaint();
-                
+                if (originalImage != null) {
+                    rightPanel.setLayout(new BorderLayout());
+                    rightPanel.removeAll();
+                    rightPanel.setBorder(BorderFactory.createTitledBorder("Histograma da imagem original"));
+                    rightPanel.add(createHistograma());
+                    rightPanel.revalidate();
+                    rightPanel.repaint();
+                }                
             }
         });
         return estatisticaHistograma;
@@ -347,14 +348,17 @@ public class PDI extends JFrame {
      */
     private JMenuItem createTransformacoesAcimaMedia() {
         JMenuItem transformacoesAcimaMedia = new JMenuItem("Pixels acima da média para branco");
+        transformacoesAcimaMedia.setToolTipText("Transforma pixels com valor acima da média para branco");
         transformacoesAcimaMedia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
-                modifiedImage = Transformations.aboveAvgToWhite(originalImage, originalImageStatistics);
-                modifiedImageStatistics = new ImageStatistics(modifiedImage);
-                modifiedImageStatistics.computeAll();
-                refreshModifiedImagePanel();
+                if (originalImage != null) {
+                    modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
+                    modifiedImage = Transformations.aboveAvgToWhite(originalImage, originalImageStatistics);
+                    modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                    modifiedImageStatistics.computeAll();
+                    refreshModifiedImagePanel();
+                }
             }
         });
         return transformacoesAcimaMedia;
@@ -367,14 +371,17 @@ public class PDI extends JFrame {
      */
     private JMenuItem createTransformacoesAbaixoMediana() {
         JMenuItem transformacoesAbaixoMediana = new JMenuItem("Pixels abaixo da mediana para preto");
+        transformacoesAbaixoMediana.setToolTipText("Transforma pixels com valor abaixo da mediana para preto");
         transformacoesAbaixoMediana.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
-                modifiedImage = Transformations.belowMedianToBlack(originalImage, originalImageStatistics);
-                modifiedImageStatistics = new ImageStatistics(modifiedImage);
-                modifiedImageStatistics.computeAll();
-                refreshModifiedImagePanel();
+                if (originalImage != null) {
+                    modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
+                    modifiedImage = Transformations.belowMedianToBlack(originalImage, originalImageStatistics);
+                    modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                    modifiedImageStatistics.computeAll();
+                    refreshModifiedImagePanel();
+                }
             }
         });
         return transformacoesAbaixoMediana;
@@ -387,14 +394,17 @@ public class PDI extends JFrame {
      */
     private JMenuItem createTransformacoesModa() {
         JMenuItem transformacoesModa = new JMenuItem("Pixels acima da moda para branco e demais para preto");
+        transformacoesModa.setToolTipText("Transforma pixels com valor acima da moda para branco e pixels com valor igual ou abaixo da moda para preto");
         transformacoesModa.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
-                modifiedImage = Transformations.aboveModeToWhiteOthersBlack(originalImage, originalImageStatistics);
-                modifiedImageStatistics = new ImageStatistics(modifiedImage);
-                modifiedImageStatistics.computeAll();
-                refreshModifiedImagePanel();
+                if (originalImage != null) {
+                    modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
+                    modifiedImage = Transformations.aboveModeToWhiteOthersBlack(originalImage, originalImageStatistics);
+                    modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                    modifiedImageStatistics.computeAll();
+                    refreshModifiedImagePanel();
+                }
             }
         });
         return transformacoesModa;
@@ -407,14 +417,17 @@ public class PDI extends JFrame {
      */
     private JMenuItem createTransformacoesInvertePixels() {
         JMenuItem transformacoesInverter = new JMenuItem("Inverter valor dos pixels");
+        transformacoesInverter.setToolTipText("Inverte valor dos pixels de forma que os pixels escuros fiquem claros");
         transformacoesInverter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
-                modifiedImage = Transformations.reversePixelsValue(originalImage);
-                modifiedImageStatistics = new ImageStatistics(modifiedImage);
-                modifiedImageStatistics.computeAll();
-                refreshModifiedImagePanel();
+                if (originalImage != null) {
+                    modifiedImage = new Image(originalImage.getHeight(), originalImage.getWidth());
+                    modifiedImage = Transformations.reversePixelsValue(originalImage);
+                    modifiedImageStatistics = new ImageStatistics(modifiedImage);
+                    modifiedImageStatistics.computeAll();
+                    refreshModifiedImagePanel();
+                }
             }
         });
         return transformacoesInverter;
