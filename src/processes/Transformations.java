@@ -1,4 +1,7 @@
-package pdi;
+package processes;
+
+import commons.ImageStatistics;
+import commons.Image;
 
 /**
  * Transformações em imagem

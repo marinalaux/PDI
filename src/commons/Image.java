@@ -1,4 +1,4 @@
-package pdi;
+package commons;
 
 import java.awt.image.BufferedImage;
 
