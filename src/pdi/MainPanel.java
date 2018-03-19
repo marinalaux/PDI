@@ -191,6 +191,32 @@ public class MainPanel extends JPanel {
         revalidate();
         repaint();
     }
+    
+    /**
+     * Exibe painel para redimensionar a imagem
+     */
+    public void showResizePanel() {
+        resetModifiedImagePanel();
+        ImageView imageResizePanel = new ImageView();
+        JPanel resizeInformationPanel = new JPanel(new BorderLayout());
+        resizeInformationPanel.add(new ResizeParametersView((ResizeParametersBean params) -> {
+            modifiedImage = GeometricTransformations.transforma(originalImage, params.getMatrix());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageResizePanel.updateImage(modifiedImage);
+            resizeInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageResizePanel, BorderLayout.CENTER);
+        rightPanel.add(resizeInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
 
     /**
      * Retorna a imagem modificada
