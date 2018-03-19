@@ -25,10 +25,10 @@ public class MirrorParametersBean {
      * 
      * @return Matriz para espelhamento
      */
-    public int[][] getMatrix() {
-        return new int[][] {{horizontal?-1:1, 0, 0},
-                            {0, vertical?-1:1, 0},
-                            {0, 0, 1}};
+    public double[][] getMatrix() {
+        return new double[][] {{horizontal?-1:1,             0, 0},
+                               {              0, vertical?-1:1, 0},
+                               {              0,             0, 1}};
     }
     
 }

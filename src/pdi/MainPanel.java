@@ -160,9 +160,34 @@ public class MainPanel extends JPanel {
             rightPanel.revalidate();
             rightPanel.repaint();
         }), BorderLayout.CENTER);
-        
         rightPanel.add(imageMirrorPanel, BorderLayout.CENTER);
         rightPanel.add(mirroringInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
+     * Exibe painel para transladar a imagem
+     */
+    public void showTransferPanel() {
+        resetModifiedImagePanel();
+        ImageView imageTransferPanel = new ImageView();
+        JPanel transferInformationPanel = new JPanel(new BorderLayout());
+        transferInformationPanel.add(new TransferParametersView((TransferParametersBean params) -> {
+            modifiedImage = GeometricTransformations.transforma(originalImage, params.getMatrix());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageTransferPanel.updateImage(modifiedImage);
+            transferInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageTransferPanel, BorderLayout.CENTER);
+        rightPanel.add(transferInformationPanel, BorderLayout.SOUTH);
         revalidate();
         repaint();
     }

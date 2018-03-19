@@ -418,7 +418,9 @@ public class PDI extends JFrame {
         transformacoesEspelhar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainPanel.showMirrorPanel();                
+                if (originalImage != null) {
+                    mainPanel.showMirrorPanel();
+                }
             }
         });
         return transformacoesEspelhar;
@@ -432,7 +434,14 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesTransladar() {
         JMenuItem transformacoesTransladar = new JMenuItem("Transladar");
         transformacoesTransladar.setMnemonic(KeyEvent.VK_T);
-        
+        transformacoesTransladar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    mainPanel.showTransferPanel();
+                }
+            }
+        });
         return transformacoesTransladar;
     }
     
@@ -444,7 +453,14 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesRedimensionar() {
         JMenuItem transformacoesRedimensionar = new JMenuItem("Redimensionar");
         transformacoesRedimensionar.setMnemonic(KeyEvent.VK_R);
-        
+        transformacoesRedimensionar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    
+                }
+            }
+        });
         return transformacoesRedimensionar;
     }
     
@@ -456,7 +472,14 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesRotacionar() {
         JMenuItem transformacoesRotacionar = new JMenuItem("Rotacionar");
         transformacoesRotacionar.setMnemonic(KeyEvent.VK_O);
-        
+        transformacoesRotacionar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    
+                }
+            }
+        });
         return transformacoesRotacionar;
     }
     

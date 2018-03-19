@@ -16,7 +16,7 @@ public class GeometricTransformations {
      * @param matrix
      * @return 
      */
-    public static Image transforma(Image original, int[][] matrix) {
+    public static Image transforma(Image original, double[][] matrix) {
         Image result = new Image(original.getHeight(), original.getWidth());
         int halfX = original.getWidth() / 2;
         int halfY = original.getHeight() / 2;
