@@ -219,6 +219,32 @@ public class MainPanel extends JPanel {
     }
 
     /**
+     * Exibe painel para rotacionar a imagem
+     */
+    public void showRotationPanel() {
+        resetModifiedImagePanel();
+        ImageView imageRotationPanel = new ImageView();
+        JPanel rotationInformationPanel = new JPanel(new BorderLayout());
+        rotationInformationPanel.add(new RotationParametersView((RotationParametersBean params) -> {
+            modifiedImage = GeometricTransformations.transforma(originalImage, params.getMatrix());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageRotationPanel.updateImage(modifiedImage);
+            rotationInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageRotationPanel, BorderLayout.CENTER);
+        rightPanel.add(rotationInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
      * Retorna a imagem modificada
      * 
      * @return Imagem modificada

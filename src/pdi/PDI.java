@@ -476,7 +476,7 @@ public class PDI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (originalImage != null) {
-                    
+                    mainPanel.showRotationPanel();
                 }
             }
         });
