@@ -74,7 +74,7 @@ public class MainPanel extends JPanel {
     public void showOriginalImageStatistics(ImageStatistics statistics) {
         rightPanel.removeAll();
         rightPanel.setBorder(BorderFactory.createTitledBorder("Estatísticas da imagem original"));
-        rightPanel.add(new ImageStatisticsView("",
+        rightPanel.add(new ImageStatisticsView(false,
                 statistics.computeMedia(), 
                 statistics.computeMediana(), 
                 statistics.computeModa(), 
@@ -130,7 +130,7 @@ public class MainPanel extends JPanel {
         ImageView modifiedImagePanel = new ImageView();
         modifiedImagePanel.updateImage(modifiedImage);
         rightPanel.add(modifiedImagePanel, BorderLayout.CENTER);
-        rightPanel.add(new ImageStatisticsView("Cálculos estatísticos",
+        rightPanel.add(new ImageStatisticsView(true,
                 modifiedImageStatistics.computeMedia(),
                 modifiedImageStatistics.computeMediana(),
                 modifiedImageStatistics.computeModa(),
@@ -152,7 +152,7 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageMirrorPanel.updateImage(modifiedImage);
-            mirroringInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+            mirroringInformationPanel.add(new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
@@ -178,7 +178,7 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageTransferPanel.updateImage(modifiedImage);
-            transferInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+            transferInformationPanel.add(new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
@@ -204,7 +204,7 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageResizePanel.updateImage(modifiedImage);
-            resizeInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+            resizeInformationPanel.add(new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
@@ -230,7 +230,7 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageRotationPanel.updateImage(modifiedImage);
-            rotationInformationPanel.add(new ImageStatisticsView("Cálculos estatísticos", 
+            rotationInformationPanel.add(new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 

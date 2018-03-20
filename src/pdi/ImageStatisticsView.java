@@ -15,17 +15,16 @@ public class ImageStatisticsView extends JPanel {
     /**
      * Construtor
      * 
-     * @param borderTitle
+     * @param showBorderTitle
      * @param media
      * @param mediana
      * @param moda
      * @param variancia
      */
-    public ImageStatisticsView(String borderTitle, float media, int mediana, int moda, float variancia) {
+    public ImageStatisticsView(boolean showBorderTitle, float media, int mediana, int moda, float variancia) {
         super();
-        // Apenas cria a borda do painel caso tenha um título para ele
-        if (!borderTitle.isEmpty()) {
-            setBorder(BorderFactory.createTitledBorder(borderTitle));
+        if (showBorderTitle) {
+            setBorder(BorderFactory.createTitledBorder("Cálculos estatísticos"));
         }
         JPanel statisticsPanel = new JPanel();
         statisticsPanel.add(showImageStatistics(media, mediana, moda, variancia));
