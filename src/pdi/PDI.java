@@ -4,6 +4,7 @@ import processes.Transformations;
 import commons.ImageStatistics;
 import commons.Image;
 import com.sun.glass.events.KeyEvent;
+import filters.GaussFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,6 +77,7 @@ public class PDI extends JFrame {
         menuBar.add(createMenuArquivo());
         menuBar.add(createMenuEstatistica());
         menuBar.add(createMenuTransformacoesGeometricas());
+        menuBar.add(createMenuFiltros());
         return menuBar;
     }
 
@@ -122,6 +124,20 @@ public class PDI extends JFrame {
         menuTransformacoes.add(createMenuTransformacoesRedimensionar());
         menuTransformacoes.add(createMenuTransformacoesRotacionar());
         return menuTransformacoes;
+    }
+    
+    /**
+     * Cria menu de primeiro nível para filtros
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuFiltros() {
+        JMenu menuFiltros = new JMenu("Filtros");
+        menuFiltros.setMnemonic(KeyEvent.VK_F);
+        menuFiltros.add(createMenuFiltrosBrilho());
+        menuFiltros.add(createMenuFiltrosContraste());
+        menuFiltros.add(createMenuFiltrosGauss());
+        return menuFiltros;
     }
 
     /**
@@ -481,6 +497,64 @@ public class PDI extends JFrame {
             }
         });
         return transformacoesRotacionar;
+    }
+    
+    /**
+     * Cria submenu para aplicação de brilho
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosBrilho() {
+        JMenuItem filtrosBrilho = new JMenuItem("Brilho");
+        filtrosBrilho.setMnemonic(KeyEvent.VK_B);
+        filtrosBrilho.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    mainPanel.showBrightnessPanel();
+                }
+            }
+        });
+        return filtrosBrilho;
+    }
+    
+    /**
+     * Cria submenu para aplicação de contraste
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosContraste() {
+        JMenuItem filtroContraste = new JMenuItem("Contraste");
+        filtroContraste.setMnemonic(KeyEvent.VK_C);
+        filtroContraste.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    mainPanel.showContrastPanel();
+                }
+            }
+        });
+        return filtroContraste;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro Gauss
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosGauss() {
+        JMenuItem filtrosGauss = new JMenuItem("Gauss");
+        filtrosGauss.setMnemonic(KeyEvent.VK_G);
+        filtrosGauss.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (originalImage != null) {
+                    mainPanel.setModifiedImage(GaussFilter.apply(originalImage));
+                    mainPanel.showModifiedImageInformations();
+                }
+            }
+        });
+        return filtrosGauss;
     }
     
     /**

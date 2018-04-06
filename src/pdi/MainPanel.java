@@ -2,6 +2,7 @@ package pdi;
 
 import commons.Image;
 import commons.ImageStatistics;
+import filters.BrightnessContrastFilter;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javafx.application.Platform;
@@ -30,6 +31,8 @@ public class MainPanel extends JPanel {
     private ImageStatistics originalImageStatistics;
     /** Imagem modificada */
     private Image modifiedImage;
+    /** Painel de visualização das estatísticas da imagem modificada */
+    private ImageStatisticsView modifiedImageStatisticsPanel;
     /** Painel direito */
     private final JPanel rightPanel;
     /** Painel para criação do histograma */
@@ -152,11 +155,13 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageMirrorPanel.updateImage(modifiedImage);
-            mirroringInformationPanel.add(new ImageStatisticsView(true, 
+            removeStatisticsPanel(mirroringInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
-                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+                    modifiedImageStatistics.computeVariancia());
+            mirroringInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
             rightPanel.revalidate();
             rightPanel.repaint();
         }), BorderLayout.CENTER);
@@ -178,11 +183,13 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageTransferPanel.updateImage(modifiedImage);
-            transferInformationPanel.add(new ImageStatisticsView(true, 
+            removeStatisticsPanel(transferInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
-                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+                    modifiedImageStatistics.computeVariancia());
+            transferInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
             rightPanel.revalidate();
             rightPanel.repaint();
         }), BorderLayout.CENTER);
@@ -204,11 +211,13 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageResizePanel.updateImage(modifiedImage);
-            resizeInformationPanel.add(new ImageStatisticsView(true, 
+            removeStatisticsPanel(resizeInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
-                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+                    modifiedImageStatistics.computeVariancia());
+            resizeInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
             rightPanel.revalidate();
             rightPanel.repaint();
         }), BorderLayout.CENTER);
@@ -230,16 +239,74 @@ public class MainPanel extends JPanel {
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageRotationPanel.updateImage(modifiedImage);
-            rotationInformationPanel.add(new ImageStatisticsView(true, 
+            removeStatisticsPanel(rotationInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
                     modifiedImageStatistics.computeMedia(), 
                     modifiedImageStatistics.computeMediana(), 
                     modifiedImageStatistics.computeModa(), 
-                    modifiedImageStatistics.computeVariancia()), BorderLayout.NORTH);
+                    modifiedImageStatistics.computeVariancia());
+            rotationInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
             rightPanel.revalidate();
             rightPanel.repaint();
         }), BorderLayout.CENTER);
         rightPanel.add(imageRotationPanel, BorderLayout.CENTER);
         rightPanel.add(rotationInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
+     * Exibe painel para aplicação de brilho na imagem
+     */
+    public void showBrightnessPanel() {
+        resetModifiedImagePanel();
+        ImageView imageBrightnessPanel = new ImageView();
+        JPanel brightnessInformationPanel = new JPanel(new BorderLayout());
+        brightnessInformationPanel.add(new BrightnessParametersView((BrightnessParametersBean params) -> {
+            modifiedImage = BrightnessContrastFilter.applyBrightness(originalImage, params.getBrightness());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageBrightnessPanel.updateImage(modifiedImage);
+            removeStatisticsPanel(brightnessInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia());
+            brightnessInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageBrightnessPanel, BorderLayout.CENTER);
+        rightPanel.add(brightnessInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
+     * Exibe painel para aplicação de contraste na imagem
+     */
+    public void showContrastPanel() {
+        resetModifiedImagePanel();
+        ImageView imageContrastPanel = new ImageView();
+        JPanel contrastInformationPanel = new JPanel(new BorderLayout());
+        contrastInformationPanel.add(new ContrastParametersView((ContrastParametersBean params) -> {
+            modifiedImage = BrightnessContrastFilter.applyContrast(originalImage, params.getContrast());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageContrastPanel.updateImage(modifiedImage);
+            removeStatisticsPanel(contrastInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia());
+            contrastInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageContrastPanel, BorderLayout.CENTER);
+        rightPanel.add(contrastInformationPanel, BorderLayout.SOUTH);
         revalidate();
         repaint();
     }
@@ -270,6 +337,17 @@ public class MainPanel extends JPanel {
         rightPanel.removeAll();
         rightPanel.setLayout(new BorderLayout());
         rightPanel.setBorder(BorderFactory.createTitledBorder("Imagem transformada"));
+    }
+    
+    /**
+     * Remove painel de estatísticas da imagem do painel de informações da imagem modificada
+     * 
+     * @param panel 
+     */
+    private void removeStatisticsPanel(JPanel panel) {
+        if (modifiedImageStatisticsPanel != null) {            
+            panel.remove(modifiedImageStatisticsPanel);
+        }
     }
     
 }
