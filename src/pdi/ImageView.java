@@ -1,6 +1,8 @@
 package pdi;
 
 import commons.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -13,8 +15,10 @@ import javax.swing.JPanel;
  */
 public class ImageView extends JPanel {
 
+    /** Imagem para exibição */
+    private JLabel imageLabel;
     /** Imagem */
-    private JLabel image;
+    private Image image;
 
     /**
      * Construtor
@@ -34,8 +38,37 @@ public class ImageView extends JPanel {
         if (!borderTitle.isEmpty()) {
             setBorder(BorderFactory.createTitledBorder(borderTitle));
         }
-        image = new JLabel();
-        add(image);
+        imageLabel = new JLabel();
+        imageLabel.addMouseListener(new MouseListener() {
+            
+            PixelsView view;
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (view == null) {
+                    view = new PixelsView(image, e);
+                    view.setVisible(true);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (view != null) {
+                    view.dispose();
+                    view = null;
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+        add(imageLabel);
     }
     
     /**
@@ -44,7 +77,9 @@ public class ImageView extends JPanel {
      * @param image 
      */
     public void updateImage(Image image) {
-        this.image.setIcon(new ImageIcon(image.toBufferedImage()));
+        this.imageLabel.setIcon(new ImageIcon(image.toBufferedImage()));
+        this.image = new Image(image.getHeight(), image.getWidth());
+        this.image.setPixels(image.getPixels());
     }
     
 }
