@@ -8,6 +8,7 @@ import java.util.Arrays;
  * @author Marina
  */
 public class ImageStatistics {
+    
     /** Imagem */
     private final Image image;
     /** Média */

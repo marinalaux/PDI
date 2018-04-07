@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import processes.Filter;
 import processes.GeometricTransformations;
 
 /**
@@ -307,6 +308,36 @@ public class MainPanel extends JPanel {
         }), BorderLayout.CENTER);
         rightPanel.add(imageContrastPanel, BorderLayout.CENTER);
         rightPanel.add(contrastInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
+     * Exibe painel para aplicação de convolução com um threshold
+     * 
+     * @param convolution 
+     */
+    public void showThresholdingPanel(Filter convolution) {
+        resetModifiedImagePanel();
+        ImageView imageThresholdingPanel = new ImageView();
+        JPanel thresholdingInformationPanel = new JPanel(new BorderLayout());
+        thresholdingInformationPanel.add(new ThresholdView((ThresholdBean params) -> {
+            modifiedImage = convolution.apply(originalImage, params.getThreshold());
+            ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
+            modifiedImageStatistics.computeAll();
+            imageThresholdingPanel.updateImage(modifiedImage);
+            removeStatisticsPanel(thresholdingInformationPanel);
+            modifiedImageStatisticsPanel = new ImageStatisticsView(true, 
+                    modifiedImageStatistics.computeMedia(), 
+                    modifiedImageStatistics.computeMediana(), 
+                    modifiedImageStatistics.computeModa(), 
+                    modifiedImageStatistics.computeVariancia());
+            thresholdingInformationPanel.add(modifiedImageStatisticsPanel, BorderLayout.NORTH);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        }), BorderLayout.CENTER);
+        rightPanel.add(imageThresholdingPanel, BorderLayout.CENTER);
+        rightPanel.add(thresholdingInformationPanel, BorderLayout.SOUTH);
         revalidate();
         repaint();
     }

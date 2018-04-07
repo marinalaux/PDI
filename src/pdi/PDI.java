@@ -4,7 +4,13 @@ import processes.Transformations;
 import commons.ImageStatistics;
 import commons.Image;
 import com.sun.glass.events.KeyEvent;
+import filters.AverageFilter;
 import filters.GaussFilter;
+import filters.KirschFilter;
+import filters.MarrAndHildrethFilter;
+import filters.RobertsFilter;
+import filters.RobinsonFilter;
+import filters.SobelFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -136,7 +142,8 @@ public class PDI extends JFrame {
         menuFiltros.setMnemonic(KeyEvent.VK_F);
         menuFiltros.add(createMenuFiltrosBrilho());
         menuFiltros.add(createMenuFiltrosContraste());
-        menuFiltros.add(createMenuFiltrosGauss());
+        menuFiltros.add(createMenuFiltrosPassaBaixa());
+        menuFiltros.add(createMenuFiltrosPassaAlta());
         return menuFiltros;
     }
 
@@ -148,12 +155,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuArquivoAbrir() {
         JMenuItem arquivoAbrir = new JMenuItem("Abrir imagem");
         arquivoAbrir.setMnemonic(KeyEvent.VK_A);
-        arquivoAbrir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openImage();
-                mainPanel.updateOriginalImage(originalImage);
-            }
+        arquivoAbrir.addActionListener((ActionEvent e) -> {
+            openImage();
+            mainPanel.updateOriginalImage(originalImage);
         });
         return arquivoAbrir;
     }
@@ -179,12 +183,9 @@ public class PDI extends JFrame {
      */
     private JMenuItem createArquivoAbrirLena() {
         JMenuItem abrirLena = new JMenuItem("Lena");
-        abrirLena.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadImage(PDI.class.getResourceAsStream("/res/lena.png"));
-                mainPanel.updateOriginalImage(originalImage);
-            }
+        abrirLena.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/lena.png"));
+            mainPanel.updateOriginalImage(originalImage);
         });
         return abrirLena;
     }
@@ -196,12 +197,9 @@ public class PDI extends JFrame {
      */
     private JMenuItem createArquivoAbrirEye() {
         JMenuItem abrirEye = new JMenuItem("Olho");
-        abrirEye.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadImage(PDI.class.getResourceAsStream("/res/eye.png"));
-                mainPanel.updateOriginalImage(originalImage);
-            }
+        abrirEye.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/eye.png"));
+            mainPanel.updateOriginalImage(originalImage);
         });
         return abrirEye;
     }
@@ -213,12 +211,9 @@ public class PDI extends JFrame {
      */
     private JMenuItem createArquivoAbrirLandscape() {
         JMenuItem abrirLandscape = new JMenuItem("Paisagem");
-        abrirLandscape.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadImage(PDI.class.getResourceAsStream("/res/landscape.png"));
-                mainPanel.updateOriginalImage(originalImage);
-            }
+        abrirLandscape.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/landscape.png"));
+            mainPanel.updateOriginalImage(originalImage);
         });
         return abrirLandscape;
     }
@@ -232,16 +227,13 @@ public class PDI extends JFrame {
         JMenuItem arquivoSalvarOriginal = new JMenuItem("Salvar imagem original");
         arquivoSalvarOriginal.setMnemonic(KeyEvent.VK_O);
         arquivoSalvarOriginal.setToolTipText("Salva a imagem original na área de trabalho do computador");
-        arquivoSalvarOriginal.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    File original = new File(System.getProperty("user.home") + "\\Desktop\\ImagemOriginal.png");
-                    try {
-                        ImageIO.write(originalImage.toBufferedImage(), "png", original);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+        arquivoSalvarOriginal.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                File original = new File(System.getProperty("user.home") + "\\Desktop\\ImagemOriginal.png");
+                try {
+                    ImageIO.write(originalImage.toBufferedImage(), "png", original);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -257,16 +249,13 @@ public class PDI extends JFrame {
         JMenuItem arquivoSalvarTransformada = new JMenuItem("Salvar imagem transformada");
         arquivoSalvarTransformada.setMnemonic(KeyEvent.VK_T);
         arquivoSalvarTransformada.setToolTipText("Salva a imagem transformada na área de trabalho do computador");
-        arquivoSalvarTransformada.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (mainPanel.getModifiedImage() != null) {
-                    File modified = new File(System.getProperty("user.home") + "\\Desktop\\ImagemModificada.png");
-                    try {
-                        ImageIO.write(mainPanel.getModifiedImage().toBufferedImage(), "png", modified);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+        arquivoSalvarTransformada.addActionListener((ActionEvent e) -> {
+            if (mainPanel.getModifiedImage() != null) {
+                File modified = new File(System.getProperty("user.home") + "\\Desktop\\ImagemModificada.png");
+                try {
+                    ImageIO.write(mainPanel.getModifiedImage().toBufferedImage(), "png", modified);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -281,11 +270,8 @@ public class PDI extends JFrame {
     private JMenuItem createMenuArquivoSairPrograma() {
         JMenuItem arquivoSair = new JMenuItem("Sair do programa");
         arquivoSair.setMnemonic(KeyEvent.VK_S);
-        arquivoSair.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+        arquivoSair.addActionListener((ActionEvent e) -> {
+            dispose();
         });
         return arquivoSair;
     }
@@ -298,12 +284,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuEstatisticaCalculos() {
         JMenuItem estatisticaCalculos = new JMenuItem("Cálculos estatísticos");
         estatisticaCalculos.setMnemonic(KeyEvent.VK_C);
-        estatisticaCalculos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showOriginalImageStatistics(originalImageStatistics);
-                }
+        estatisticaCalculos.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showOriginalImageStatistics(originalImageStatistics);
             }
         });
         return estatisticaCalculos;
@@ -317,12 +300,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuEstatisticaHistograma() {
         JMenuItem estatisticaHistograma = new JMenuItem("Histograma");
         estatisticaHistograma.setMnemonic(KeyEvent.VK_H);
-        estatisticaHistograma.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showOriginalImageHistogram(originalImageStatistics);
-                }                
+        estatisticaHistograma.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showOriginalImageHistogram(originalImageStatistics);                
             }
         });
         return estatisticaHistograma;
@@ -351,13 +331,10 @@ public class PDI extends JFrame {
     private JMenuItem createTransformacoesAcimaMedia() {
         JMenuItem transformacoesAcimaMedia = new JMenuItem("Pixels acima da média para branco");
         transformacoesAcimaMedia.setToolTipText("Transforma pixels com valor acima da média para branco");
-        transformacoesAcimaMedia.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.setModifiedImage(Transformations.aboveAvgToWhite(originalImage, originalImageStatistics));
-                    mainPanel.showModifiedImageInformations();
-                }
+        transformacoesAcimaMedia.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(Transformations.aboveAvgToWhite(originalImage, originalImageStatistics));
+                mainPanel.showModifiedImageInformations();
             }
         });
         return transformacoesAcimaMedia;
@@ -371,13 +348,10 @@ public class PDI extends JFrame {
     private JMenuItem createTransformacoesAbaixoMediana() {
         JMenuItem transformacoesAbaixoMediana = new JMenuItem("Pixels abaixo da mediana para preto");
         transformacoesAbaixoMediana.setToolTipText("Transforma pixels com valor abaixo da mediana para preto");
-        transformacoesAbaixoMediana.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.setModifiedImage(Transformations.belowMedianToBlack(originalImage, originalImageStatistics));
-                    mainPanel.showModifiedImageInformations();
-                }
+        transformacoesAbaixoMediana.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(Transformations.belowMedianToBlack(originalImage, originalImageStatistics));
+                mainPanel.showModifiedImageInformations();
             }
         });
         return transformacoesAbaixoMediana;
@@ -391,13 +365,10 @@ public class PDI extends JFrame {
     private JMenuItem createTransformacoesModa() {
         JMenuItem transformacoesModa = new JMenuItem("Pixels acima da moda para branco e demais para preto");
         transformacoesModa.setToolTipText("Transforma pixels com valor acima da moda para branco e pixels com valor igual ou abaixo da moda para preto");
-        transformacoesModa.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.setModifiedImage(Transformations.aboveModeToWhiteOthersBlack(originalImage, originalImageStatistics));
-                    mainPanel.showModifiedImageInformations();
-                }
+        transformacoesModa.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(Transformations.aboveModeToWhiteOthersBlack(originalImage, originalImageStatistics));
+                mainPanel.showModifiedImageInformations();
             }
         });
         return transformacoesModa;
@@ -411,13 +382,10 @@ public class PDI extends JFrame {
     private JMenuItem createTransformacoesInvertePixels() {
         JMenuItem transformacoesInverter = new JMenuItem("Inverter valor dos pixels");
         transformacoesInverter.setToolTipText("Inverte valor dos pixels de forma que os pixels escuros fiquem claros");
-        transformacoesInverter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.setModifiedImage(Transformations.reversePixelsValue(originalImage));
-                    mainPanel.showModifiedImageInformations();
-                }
+        transformacoesInverter.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(Transformations.reversePixelsValue(originalImage));
+                mainPanel.showModifiedImageInformations();
             }
         });
         return transformacoesInverter;
@@ -431,12 +399,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesEspelhar() {
         JMenuItem transformacoesEspelhar = new JMenuItem("Espelhar");
         transformacoesEspelhar.setMnemonic(KeyEvent.VK_E);
-        transformacoesEspelhar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showMirrorPanel();
-                }
+        transformacoesEspelhar.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showMirrorPanel();
             }
         });
         return transformacoesEspelhar;
@@ -450,12 +415,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesTransladar() {
         JMenuItem transformacoesTransladar = new JMenuItem("Transladar");
         transformacoesTransladar.setMnemonic(KeyEvent.VK_T);
-        transformacoesTransladar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showTransferPanel();
-                }
+        transformacoesTransladar.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showTransferPanel();
             }
         });
         return transformacoesTransladar;
@@ -469,12 +431,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesRedimensionar() {
         JMenuItem transformacoesRedimensionar = new JMenuItem("Redimensionar");
         transformacoesRedimensionar.setMnemonic(KeyEvent.VK_R);
-        transformacoesRedimensionar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showResizePanel();
-                }
+        transformacoesRedimensionar.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showResizePanel();
             }
         });
         return transformacoesRedimensionar;
@@ -488,12 +447,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuTransformacoesRotacionar() {
         JMenuItem transformacoesRotacionar = new JMenuItem("Rotacionar");
         transformacoesRotacionar.setMnemonic(KeyEvent.VK_O);
-        transformacoesRotacionar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showRotationPanel();
-                }
+        transformacoesRotacionar.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showRotationPanel();
             }
         });
         return transformacoesRotacionar;
@@ -507,12 +463,9 @@ public class PDI extends JFrame {
     private JMenuItem createMenuFiltrosBrilho() {
         JMenuItem filtrosBrilho = new JMenuItem("Brilho");
         filtrosBrilho.setMnemonic(KeyEvent.VK_B);
-        filtrosBrilho.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showBrightnessPanel();
-                }
+        filtrosBrilho.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showBrightnessPanel();
             }
         });
         return filtrosBrilho;
@@ -526,15 +479,42 @@ public class PDI extends JFrame {
     private JMenuItem createMenuFiltrosContraste() {
         JMenuItem filtroContraste = new JMenuItem("Contraste");
         filtroContraste.setMnemonic(KeyEvent.VK_C);
-        filtroContraste.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.showContrastPanel();
-                }
+        filtroContraste.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showContrastPanel();
             }
         });
         return filtroContraste;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtros passa-baixas
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuFiltrosPassaBaixa() {
+        JMenu filtroPassaBaixa = new JMenu("Filtros Passa-Baixas");
+        filtroPassaBaixa.setMnemonic(KeyEvent.VK_P);
+        filtroPassaBaixa.add(createMenuFiltrosMedia());
+        filtroPassaBaixa.add(createMenuFiltrosGauss());
+        return filtroPassaBaixa;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro média
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosMedia() {
+        JMenuItem filtroMedia = new JMenuItem("Média");
+        filtroMedia.setMnemonic(KeyEvent.VK_M);
+        filtroMedia.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new AverageFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
+        return filtroMedia;
     }
     
     /**
@@ -543,18 +523,111 @@ public class PDI extends JFrame {
      * @return JMenuItem
      */
     private JMenuItem createMenuFiltrosGauss() {
-        JMenuItem filtrosGauss = new JMenuItem("Gauss");
-        filtrosGauss.setMnemonic(KeyEvent.VK_G);
-        filtrosGauss.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (originalImage != null) {
-                    mainPanel.setModifiedImage(new GaussFilter().apply(originalImage));
-                    mainPanel.showModifiedImageInformations();
-                }
+        JMenuItem filtroGauss = new JMenuItem("Gauss");
+        filtroGauss.setMnemonic(KeyEvent.VK_G);
+        filtroGauss.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new GaussFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
             }
         });
-        return filtrosGauss;
+        return filtroGauss;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtros passa-altas
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuFiltrosPassaAlta() {
+        JMenu filtroPassaAlta = new JMenu("Filtros Passa-Altas");
+        filtroPassaAlta.setMnemonic(KeyEvent.VK_A);
+        filtroPassaAlta.add(createFiltroRoberts());
+        filtroPassaAlta.add(createFiltroSobel());
+        filtroPassaAlta.add(createFiltroKirsch());
+        filtroPassaAlta.add(createFiltroRobinson());
+        filtroPassaAlta.add(createFiltroMarrAndHildreth());
+        return filtroPassaAlta;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro de Roberts
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createFiltroRoberts() {
+        JMenuItem filtroRoberts = new JMenuItem("Roberts");
+        filtroRoberts.setMnemonic(KeyEvent.VK_R);
+        filtroRoberts.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showThresholdingPanel(new RobertsFilter());
+            }
+        });
+        return filtroRoberts;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro de Sobel
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createFiltroSobel() {
+        JMenuItem filtroSobel = new JMenuItem("Sobel");
+        filtroSobel.setMnemonic(KeyEvent.VK_S);
+        filtroSobel.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showThresholdingPanel(new SobelFilter());
+            }
+        });
+        return filtroSobel;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro de Kirsch
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createFiltroKirsch() {
+        JMenuItem filtroKirsch = new JMenuItem("Kirsch");
+        filtroKirsch.setMnemonic(KeyEvent.VK_K);
+        filtroKirsch.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showThresholdingPanel(new KirschFilter());
+            }
+        });
+        return filtroKirsch;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro de Robinson
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createFiltroRobinson() {
+        JMenuItem filtroRobinson = new JMenuItem("Robinson");
+        filtroRobinson.setMnemonic(KeyEvent.VK_B);
+        filtroRobinson.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showThresholdingPanel(new RobinsonFilter());
+            }
+        });
+        return filtroRobinson;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro de Marr e Hildreth
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createFiltroMarrAndHildreth() {
+        JMenuItem filtroMarrAndHildreth = new JMenuItem("Marr and Hildreth");
+        filtroMarrAndHildreth.setMnemonic(KeyEvent.VK_M);
+        filtroMarrAndHildreth.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showThresholdingPanel(new MarrAndHildrethFilter());
+            }
+        });
+        return filtroMarrAndHildreth;
     }
     
     /**

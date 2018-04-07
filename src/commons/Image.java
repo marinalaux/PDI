@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
  * @author Marina
  */
 public class Image {
+    
     /** Altura da imagem */
     private final int height;
     /** Largura da imagem */
