@@ -1,6 +1,5 @@
 package filters;
 
-import commons.Image;
 import processes.Convolution;
 
 /**
@@ -8,18 +7,13 @@ import processes.Convolution;
  *
  * @author Marina
  */
-public class GaussFilter {
+public class GaussFilter extends Convolution {
 
     /**
-     * Aplica filtro de Gauss
-     *
-     * @param original
-     * @return Image
+     * Construtor
      */
-    public static Image apply(Image original) {
-        return Convolution.apply(original,
-                new int[][]{{1, 2, 1}, {2, 4, 2}, {1, 2, 1}},
-                16);
+    public GaussFilter() {
+        super(new int[][] {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}}, 16);
     }
 
 }

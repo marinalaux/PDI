@@ -9,42 +9,44 @@ import commons.Image;
  */
 public class Convolution {
     
+    /** Máscara de convolução */
+    private final int[][] mask;
+    /** Fator para divisão do resultado da convolução */
+    private final int factor;
+
     /**
-     * Aplica convolução
+     * Construtor
      * 
-     * @param original
-     * @param matrix
-     * @return Imagem modificada
+     * @param mask
+     * @param factor 
      */
-    public static Image apply(Image original, int[][] matrix) {
-        return apply(original, matrix, (matrix.length * matrix[0].length));
+    public Convolution(int[][] mask, int factor) {
+        this.mask = mask;
+        this.factor = factor;
     }
     
     /**
      * Aplica convolução
      * 
      * @param original
-     * @param matrix
-     * @param factor
      * @return Imagem modificada
      */
-    public static Image apply(Image original, int[][] matrix, int factor) {
+    public Image apply(Image original) {
         Image result = new Image(original.getHeight(), original.getWidth());
         result.setPixels(original.getPixels());
         for (int x = 1; x < original.getWidth() -1; x++) {
             for (int y = 1; y < original.getHeight() -1; y++) {
                 int newPixelValue = 0;
                 // Percorre a matriz de convolução
-                for (int i = 0; i < matrix.length; i++) {
-                    for (int j = 0; j < matrix[i].length; j++) {
-                        newPixelValue += matrix[i][j] * original.getPixels()[x + i - 1][y + j - 1];
+                for (int i = 0; i < mask.length; i++) {
+                    for (int j = 0; j < mask[i].length; j++) {
+                        newPixelValue += mask[i][j] * original.getPixels()[x + i - 1][y + j - 1];
                     }
                 }
                 newPixelValue = newPixelValue / factor;
                 result.setPixel(x, y, newPixelValue);
             }
         }
-        
         return result;
     }
     

@@ -549,7 +549,7 @@ public class PDI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (originalImage != null) {
-                    mainPanel.setModifiedImage(GaussFilter.apply(originalImage));
+                    mainPanel.setModifiedImage(new GaussFilter().apply(originalImage));
                     mainPanel.showModifiedImageInformations();
                 }
             }
