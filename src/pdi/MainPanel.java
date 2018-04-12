@@ -16,8 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import processes.Filter;
 import processes.GeometricTransformations;
+import processes.ConvolutionFilter;
 
 /**
  * Painel principal da janela
@@ -317,7 +317,7 @@ public class MainPanel extends JPanel {
      * 
      * @param convolution 
      */
-    public void showThresholdingPanel(Filter convolution) {
+    public void showThresholdingPanel(ConvolutionFilter convolution) {
         resetModifiedImagePanel();
         ImageView imageThresholdingPanel = new ImageView();
         JPanel thresholdingInformationPanel = new JPanel(new BorderLayout());

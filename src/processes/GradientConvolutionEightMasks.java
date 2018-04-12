@@ -8,7 +8,7 @@ import java.util.Arrays;
  * 
  * @author Marina
  */
-public class GradientConvolutionEightMasks implements Filter {
+public class GradientConvolutionEightMasks implements ConvolutionFilter {
 
     /** Primeira máscara de convolução */
     private final int[][] mask1;

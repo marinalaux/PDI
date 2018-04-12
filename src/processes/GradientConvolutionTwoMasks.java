@@ -7,7 +7,7 @@ import commons.Image;
  * 
  * @author Marina
  */
-public class GradientConvolutionTwoMasks implements Filter {
+public class GradientConvolutionTwoMasks implements ConvolutionFilter {
     
     /** Máscara de convolução para o eixo x */
     private final int[][] xMask;

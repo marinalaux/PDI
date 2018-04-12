@@ -4,8 +4,11 @@ import processes.Transformations;
 import commons.ImageStatistics;
 import commons.Image;
 import com.sun.glass.events.KeyEvent;
+import commons.Mediana;
+import commons.Moda;
 import filters.AverageFilter;
 import filters.GaussFilter;
+import filters.GenericFilter;
 import filters.KirschFilter;
 import filters.MarrAndHildrethFilter;
 import filters.RobertsFilter;
@@ -13,7 +16,6 @@ import filters.RobinsonFilter;
 import filters.SobelFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -496,6 +498,8 @@ public class PDI extends JFrame {
         JMenu filtroPassaBaixa = new JMenu("Filtros Passa-Baixas");
         filtroPassaBaixa.setMnemonic(KeyEvent.VK_P);
         filtroPassaBaixa.add(createMenuFiltrosMedia());
+        filtroPassaBaixa.add(createMenuFiltrosModa());
+        filtroPassaBaixa.add(createMenuFiltrosMediana());
         filtroPassaBaixa.add(createMenuFiltrosGauss());
         return filtroPassaBaixa;
     }
@@ -515,6 +519,40 @@ public class PDI extends JFrame {
             }
         });
         return filtroMedia;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro moda
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosModa() {
+        JMenuItem filtroModa = new JMenuItem("Moda");
+        filtroModa.setMnemonic(KeyEvent.VK_O);
+        filtroModa.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new GenericFilter().apply(originalImage, new Moda()));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
+        return filtroModa;
+    }
+    
+    /**
+     * Cria submenu para aplicação de filtro mediana
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuFiltrosMediana() {
+        JMenuItem filtroMediana = new JMenuItem("Mediana");
+        filtroMediana.setMnemonic(KeyEvent.VK_E);
+        filtroMediana.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new GenericFilter().apply(originalImage, new Mediana()));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
+        return filtroMediana;
     }
     
     /**
@@ -542,11 +580,11 @@ public class PDI extends JFrame {
     private JMenu createMenuFiltrosPassaAlta() {
         JMenu filtroPassaAlta = new JMenu("Filtros Passa-Altas");
         filtroPassaAlta.setMnemonic(KeyEvent.VK_A);
-        filtroPassaAlta.add(createFiltroRoberts());
-        filtroPassaAlta.add(createFiltroSobel());
-        filtroPassaAlta.add(createFiltroKirsch());
-        filtroPassaAlta.add(createFiltroRobinson());
-        filtroPassaAlta.add(createFiltroMarrAndHildreth());
+        filtroPassaAlta.add(createMenuFiltrosRoberts());
+        filtroPassaAlta.add(createMenuFiltrosSobel());
+        filtroPassaAlta.add(createMenuFiltrosKirsch());
+        filtroPassaAlta.add(createMenuFiltrosRobinson());
+        filtroPassaAlta.add(createMenuFiltrosMarrAndHildreth());
         return filtroPassaAlta;
     }
     
@@ -555,7 +593,7 @@ public class PDI extends JFrame {
      * 
      * @return JMenuItem
      */
-    private JMenuItem createFiltroRoberts() {
+    private JMenuItem createMenuFiltrosRoberts() {
         JMenuItem filtroRoberts = new JMenuItem("Roberts");
         filtroRoberts.setMnemonic(KeyEvent.VK_R);
         filtroRoberts.addActionListener((ActionEvent e) -> {
@@ -571,7 +609,7 @@ public class PDI extends JFrame {
      * 
      * @return JMenuItem
      */
-    private JMenuItem createFiltroSobel() {
+    private JMenuItem createMenuFiltrosSobel() {
         JMenuItem filtroSobel = new JMenuItem("Sobel");
         filtroSobel.setMnemonic(KeyEvent.VK_S);
         filtroSobel.addActionListener((ActionEvent e) -> {
@@ -587,7 +625,7 @@ public class PDI extends JFrame {
      * 
      * @return JMenuItem
      */
-    private JMenuItem createFiltroKirsch() {
+    private JMenuItem createMenuFiltrosKirsch() {
         JMenuItem filtroKirsch = new JMenuItem("Kirsch");
         filtroKirsch.setMnemonic(KeyEvent.VK_K);
         filtroKirsch.addActionListener((ActionEvent e) -> {
@@ -603,7 +641,7 @@ public class PDI extends JFrame {
      * 
      * @return JMenuItem
      */
-    private JMenuItem createFiltroRobinson() {
+    private JMenuItem createMenuFiltrosRobinson() {
         JMenuItem filtroRobinson = new JMenuItem("Robinson");
         filtroRobinson.setMnemonic(KeyEvent.VK_B);
         filtroRobinson.addActionListener((ActionEvent e) -> {
@@ -619,7 +657,7 @@ public class PDI extends JFrame {
      * 
      * @return JMenuItem
      */
-    private JMenuItem createFiltroMarrAndHildreth() {
+    private JMenuItem createMenuFiltrosMarrAndHildreth() {
         JMenuItem filtroMarrAndHildreth = new JMenuItem("Marr and Hildreth");
         filtroMarrAndHildreth.setMnemonic(KeyEvent.VK_M);
         filtroMarrAndHildreth.addActionListener((ActionEvent e) -> {

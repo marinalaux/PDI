@@ -72,10 +72,9 @@ public class ImageStatistics {
      */
     public int computeMediana() {
         if (mediana < 0) {
-            int medianIndex = (image.getWidth() * image.getHeight()) / 2;
             int[] imageArray = matrixToArray();
-            Arrays.sort(imageArray);
-            mediana = imageArray[medianIndex];
+            Mediana medianaCalculator = new Mediana();
+            mediana = medianaCalculator.compute(imageArray);
         }
         return mediana;
     }
@@ -87,28 +86,9 @@ public class ImageStatistics {
      */
     public int computeModa() {
         if (moda < 0) {
-            int modaColor = -1;
-            int modaColorQtd = -1;
-            int processingColor = -1;
-            int processingColorQtd = 1;
             int[] imageArray = matrixToArray();
-            Arrays.sort(imageArray);
-            for (int i = 0; i < imageArray.length; i++) {
-                if (processingColor != imageArray[i]) {
-                    if (processingColorQtd > modaColorQtd) {
-                        modaColor = processingColor;
-                        modaColorQtd = processingColorQtd;
-                    }
-                    processingColor = imageArray[i];
-                    processingColorQtd = 1;
-                } else {
-                    processingColorQtd++;
-                }
-            }
-            if (processingColorQtd > modaColorQtd) {
-                modaColor = processingColor;
-            }
-            moda = modaColor;
+            Moda modaCalculator = new Moda();
+            moda = modaCalculator.compute(imageArray);
         }
         return moda;
     }

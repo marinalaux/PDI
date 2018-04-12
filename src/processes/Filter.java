@@ -1,13 +1,22 @@
 package processes;
 
 import commons.Image;
+import commons.Statistics;
 
 /**
- *
+ * Filtro
+ * 
  * @author Marina
  */
 public interface Filter {
     
-    public Image apply(Image image, int threshold);
+    /**
+     * Aplica filtro
+     * 
+     * @param image
+     * @param statistics
+     * @return Imagem modificada
+     */
+    public Image apply(Image image, Statistics statistics);
     
 }
