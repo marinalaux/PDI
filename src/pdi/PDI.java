@@ -86,6 +86,7 @@ public class PDI extends JFrame {
         menuBar.add(createMenuEstatistica());
         menuBar.add(createMenuTransformacoesGeometricas());
         menuBar.add(createMenuFiltros());
+        menuBar.add(createMenuMorfologia());
         return menuBar;
     }
 
@@ -147,6 +148,21 @@ public class PDI extends JFrame {
         menuFiltros.add(createMenuFiltrosPassaBaixa());
         menuFiltros.add(createMenuFiltrosPassaAlta());
         return menuFiltros;
+    }
+    
+    /**
+     * Cria menu de primeiro nível para morfologia matemática
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuMorfologia() {
+        JMenu menuMorfologia = new JMenu("Morfologia matemática");
+        menuMorfologia.setMnemonic(KeyEvent.VK_M);
+        menuMorfologia.add(createMenuMorfologiaDilatacao());
+        menuMorfologia.add(createMenuMorfologiaErosao());
+        menuMorfologia.add(createMenuMorfologiaAbertura());
+        menuMorfologia.add(createMenuMorfologiaFechamento());
+        return menuMorfologia;
     }
 
     /**
@@ -666,6 +682,50 @@ public class PDI extends JFrame {
             }
         });
         return filtroMarrAndHildreth;
+    }
+    
+    /**
+     * Cria submenu para dilatação da imagem
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuMorfologiaDilatacao() {
+        JMenuItem morfologiaDilatacao = new JMenuItem("Dilatação");
+        morfologiaDilatacao.setMnemonic(KeyEvent.VK_D);
+        return morfologiaDilatacao;
+    }
+    
+    /**
+     * Cria submenu para erosão da imagem
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuMorfologiaErosao() {
+        JMenuItem morfologiaErosao = new JMenuItem("Erosão");
+        morfologiaErosao.setMnemonic(KeyEvent.VK_E);
+        return morfologiaErosao;
+    }
+    
+    /**
+     * Cria submenu para abertura da imagem
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuMorfologiaAbertura() {
+        JMenuItem morfologiaAbertura = new JMenuItem("Abertura");
+        morfologiaAbertura.setMnemonic(KeyEvent.VK_A);
+        return morfologiaAbertura;
+    }
+    
+    /**
+     * Cria submenu para fechamento da imagem
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuMorfologiaFechamento() {
+        JMenuItem morfologiaFechamento = new JMenuItem("Fechamento");
+        morfologiaFechamento.setMnemonic(KeyEvent.VK_F);
+        return morfologiaFechamento;
     }
     
     /**

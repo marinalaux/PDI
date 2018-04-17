@@ -1,16 +1,17 @@
 package pdi;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * Painel de exibição do threshold
@@ -30,7 +31,13 @@ public class ThresholdView extends JPanel {
     public ThresholdView(Consumer<ThresholdBean> callback) {
         super();
         this.params = new ThresholdBean();
+        params.setGauss(true);
         setBorder(BorderFactory.createTitledBorder("Threshold"));
+        JCheckBox gauss = new JCheckBox("Gauss");
+        gauss.setSelected(true);
+        gauss.addActionListener((ActionEvent e) -> {
+            params.setGauss(gauss.isSelected());
+        });
         JTextField thresholdValue = new JTextField(3);
         thresholdValue.setText("0");
         JSlider threshold = new JSlider(0, 255, 0);
@@ -54,6 +61,7 @@ public class ThresholdView extends JPanel {
         });
         JButton aplicar = new JButton("Aplicar");
         aplicar.addActionListener((e) -> callback.accept(params));
+        add(gauss);
         add(thresholdValue);
         add(threshold);
         add(aplicar);

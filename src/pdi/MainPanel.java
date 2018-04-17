@@ -3,6 +3,7 @@ package pdi;
 import commons.Image;
 import commons.ImageStatistics;
 import filters.BrightnessContrastFilter;
+import filters.GaussFilter;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javafx.application.Platform;
@@ -322,7 +323,8 @@ public class MainPanel extends JPanel {
         ImageView imageThresholdingPanel = new ImageView();
         JPanel thresholdingInformationPanel = new JPanel(new BorderLayout());
         thresholdingInformationPanel.add(new ThresholdView((ThresholdBean params) -> {
-            modifiedImage = convolution.apply(originalImage, params.getThreshold());
+            modifiedImage = convolution.apply(params.isGauss()
+                    ? new GaussFilter().apply(originalImage) : originalImage, params.getThreshold());
             ImageStatistics modifiedImageStatistics = new ImageStatistics(modifiedImage);
             modifiedImageStatistics.computeAll();
             imageThresholdingPanel.updateImage(modifiedImage);
