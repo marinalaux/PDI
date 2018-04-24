@@ -21,7 +21,9 @@ public abstract class MorphologyFilter {
         
         for (int x = 1; x < image.getWidth() -1; x++) {
             for (int y = 1; y < image.getHeight() -1; y++) {
-                int[][] subimage = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+                int[][] neighboor = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+                
+                int pixelValueSum = 0;
                 
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
@@ -31,10 +33,16 @@ public abstract class MorphologyFilter {
                         if (!isNeighborhood(x2, y2, x, y)) {
                             continue;
                         }
-                        subimage[i][j] = image.getPixels()[x2][y2];
+                        neighboor[i][j] = image.getPixels()[x2][y2];
+                        pixelValueSum += neighboor[i][j];
                     }
                 }
-                int newPixelsValue = calcula(subimage);
+                // Se a soma dos pixels for zero, ou seja, tudo preto, não deve aplicar o filtro
+                // Aqui considera-se que a imagem sempre terá fundo preto
+                if (pixelValueSum == 0) {
+                    continue;
+                }
+                int newPixelsValue = calcula(neighboor);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         int x2 = x + i - 1;

@@ -7,16 +7,20 @@ import com.sun.glass.events.KeyEvent;
 import commons.Mediana;
 import commons.Moda;
 import filters.AverageFilter;
+import filters.ClosureFilter;
 import filters.DilationFilter;
+import filters.ErosionFilter;
 import filters.GaussFilter;
 import filters.GenericFilter;
 import filters.KirschFilter;
 import filters.MarrAndHildrethFilter;
+import filters.OpeningFilter;
 import filters.RobertsFilter;
 import filters.RobinsonFilter;
 import filters.SobelFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -710,6 +714,12 @@ public class PDI extends JFrame {
     private JMenuItem createMenuMorfologiaErosao() {
         JMenuItem morfologiaErosao = new JMenuItem("Erosão");
         morfologiaErosao.setMnemonic(KeyEvent.VK_E);
+        morfologiaErosao.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new ErosionFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
         return morfologiaErosao;
     }
     
@@ -721,6 +731,12 @@ public class PDI extends JFrame {
     private JMenuItem createMenuMorfologiaAbertura() {
         JMenuItem morfologiaAbertura = new JMenuItem("Abertura");
         morfologiaAbertura.setMnemonic(KeyEvent.VK_A);
+        morfologiaAbertura.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new OpeningFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
         return morfologiaAbertura;
     }
     
@@ -732,6 +748,12 @@ public class PDI extends JFrame {
     private JMenuItem createMenuMorfologiaFechamento() {
         JMenuItem morfologiaFechamento = new JMenuItem("Fechamento");
         morfologiaFechamento.setMnemonic(KeyEvent.VK_F);
+        morfologiaFechamento.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new ClosureFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
         return morfologiaFechamento;
     }
     

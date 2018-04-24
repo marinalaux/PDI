@@ -3,42 +3,42 @@ package filters;
 import processes.MorphologyFilter;
 
 /**
- * Dilatação
+ * Erosão
  * 
  * @author Marina
  */
-public class DilationFilter extends MorphologyFilter {
-    
+public class ErosionFilter extends MorphologyFilter {
+
     /**
-     * Calcula maior valor dos pixels para dilatação
+     * Calcula menor valor dos pixels para erosão
      * 
      * @param pixels
-     * @return Maior valor de pixel
+     * @return Menor valor de pixel
      */
     @Override
     public int calcula(int[][] pixels) {
-        int maior = 0;
+        int menor = 255;
         // Elemento estruturante
         int[][] mask = {{0, 10, 0}, {10, 10, 10}, {0, 10, 0}};
         
         for (int i = 0; i < pixels.length; i++) {
             for (int j = 0; j < pixels[0].length; j++) {
-                // Considera apenas os pixels da vizinhança de 4 para dilatação
+                // Considera apenas os pixels da vizinhança de 4 para erosão
                 if (!isNeighborhood(i, j)) {
                     continue;
                 }
-                int newPixelValue = pixels[i][j] + mask[i][j];
-                if (newPixelValue > 255) {
-                    newPixelValue = 255;
+                int newPixelValue = pixels[i][j] - mask[i][j];
+                if (newPixelValue < 0) {
+                    newPixelValue = 0;
                 }
-                if (maior < newPixelValue) {
-                    maior = newPixelValue;
+                if (menor > newPixelValue) {
+                    menor = newPixelValue;
                 }
             }
         }
-        return maior;
+        return menor;
     }
-
+    
     /**
      * Pixel é vizinhança de 4
      * 
