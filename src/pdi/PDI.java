@@ -20,7 +20,6 @@ import filters.RobinsonFilter;
 import filters.SobelFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -196,6 +195,7 @@ public class PDI extends JFrame {
         arquivoAbrirEspecial.add(createArquivoAbrirLena());
         arquivoAbrirEspecial.add(createArquivoAbrirEye());
         arquivoAbrirEspecial.add(createArquivoAbrirLandscape());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploMorfologia());
         return arquivoAbrirEspecial;
     }
     
@@ -239,6 +239,15 @@ public class PDI extends JFrame {
             mainPanel.updateOriginalImage(originalImage);
         });
         return abrirLandscape;
+    }
+    
+    private JMenuItem createArquivoAbrirExemploMorfologia() {
+        JMenuItem abrirExemploMorfologia = new JMenuItem("Exemplo morfologia");
+        abrirExemploMorfologia.addActionListener(((e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/risco_branco.png"));
+            mainPanel.updateOriginalImage(originalImage);
+        }));
+        return abrirExemploMorfologia;
     }
 
     /**
