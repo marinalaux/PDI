@@ -7,6 +7,7 @@ import com.sun.glass.events.KeyEvent;
 import commons.Mediana;
 import commons.Moda;
 import filters.AverageFilter;
+import filters.DilationFilter;
 import filters.GaussFilter;
 import filters.GenericFilter;
 import filters.KirschFilter;
@@ -692,6 +693,12 @@ public class PDI extends JFrame {
     private JMenuItem createMenuMorfologiaDilatacao() {
         JMenuItem morfologiaDilatacao = new JMenuItem("Dilatação");
         morfologiaDilatacao.setMnemonic(KeyEvent.VK_D);
+        morfologiaDilatacao.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new DilationFilter().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
         return morfologiaDilatacao;
     }
     
