@@ -34,6 +34,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
+import processes.HoltProcess;
 
 /**
  * Processamento Digital de Imagens
@@ -91,6 +92,7 @@ public class PDI extends JFrame {
         menuBar.add(createMenuTransformacoesGeometricas());
         menuBar.add(createMenuFiltros());
         menuBar.add(createMenuMorfologia());
+        menuBar.add(createMenuAfinamento());
         return menuBar;
     }
 
@@ -167,6 +169,18 @@ public class PDI extends JFrame {
         menuMorfologia.add(createMenuMorfologiaAbertura());
         menuMorfologia.add(createMenuMorfologiaFechamento());
         return menuMorfologia;
+    }
+    
+    /**
+     * Cria menu de primeiro nível para afinamento
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuAfinamento() {
+        JMenu menuAfinamento = new JMenu("Afinamento");
+        menuAfinamento.setMnemonic(KeyEvent.VK_N);
+        menuAfinamento.add(createMenuAfinamentoHolt());
+        return menuAfinamento;
     }
 
     /**
@@ -764,6 +778,23 @@ public class PDI extends JFrame {
             }
         });
         return morfologiaFechamento;
+    }
+    
+    /**
+     * Cria submenu para afinamento de Holt
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuAfinamentoHolt() {
+        JMenuItem afinamentoHolt = new JMenuItem("Holt");
+        afinamentoHolt.setMnemonic(KeyEvent.VK_H);
+        afinamentoHolt.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.setModifiedImage(new HoltProcess().apply(originalImage));
+                mainPanel.showModifiedImageInformations();
+            }
+        });
+        return afinamentoHolt;
     }
     
     /**
