@@ -17,22 +17,26 @@ public class HoltProcess {
         Image result = new Image(image.getHeight(), image.getWidth());
         result.setPixels(image.getPixels());
         
+        Image process = new Image(image.getHeight(), image.getWidth());
+        process.setPixels(image.getPixels());
+        
         boolean change = true;
         boolean odd = false;
         while(change) {
             change = false;
             odd = !odd;
-            for (int x = 1; x < result.getWidth() -1; x++) {
-                for (int y = 1; y < result.getHeight() -1; y++) {
-                    if (v(result.getPixels()[x][y])) {
-                        int value = pixelValue(getNeighborhood(x, y, image), odd);
-                        if (value != result.getPixels()[x][y]) {
+            for (int x = 1; x < process.getWidth() -1; x++) {
+                for (int y = 1; y < process.getHeight() -1; y++) {
+                    if (v(process.getPixels()[x][y])) {
+                        int value = pixelValue(getNeighborhood(x, y, process), odd);
+                        if (value != process.getPixels()[x][y]) {
                             change = true;
                         }
                         result.setPixel(x, y, value);
                     }
                 }
             }
+            process.setPixels(result.getPixels());
         }
         
         return result;
