@@ -93,6 +93,7 @@ public class PDI extends JFrame {
         menuBar.add(createMenuFiltros());
         menuBar.add(createMenuMorfologia());
         menuBar.add(createMenuAfinamento());
+        menuBar.add(createMenuCaracteristicas());
         return menuBar;
     }
 
@@ -182,6 +183,18 @@ public class PDI extends JFrame {
         menuAfinamento.add(createMenuAfinamentoHolt());
         return menuAfinamento;
     }
+    
+    /**
+     * Cria menu de primeiro nível para extração de características
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuCaracteristicas() {
+        JMenu menuCaracteristicas = new JMenu("Extração de características");
+        menuCaracteristicas.setMnemonic(KeyEvent.VK_E);
+        menuCaracteristicas.add(createMenuCaracteristicasQuadrado());
+        return menuCaracteristicas;
+    }
 
     /**
      * Cria submenu para abrir a imagem
@@ -210,6 +223,8 @@ public class PDI extends JFrame {
         arquivoAbrirEspecial.add(createArquivoAbrirEye());
         arquivoAbrirEspecial.add(createArquivoAbrirLandscape());
         arquivoAbrirEspecial.add(createArquivoAbrirExemploMorfologia());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploCaracteristicasQuadrado());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploCaracteristicasCirculos());
         return arquivoAbrirEspecial;
     }
     
@@ -255,6 +270,11 @@ public class PDI extends JFrame {
         return abrirLandscape;
     }
     
+    /**
+     * Cria submenu para abrir imagem para execução da morfologia
+     * 
+     * @return JMenuItem
+     */
     private JMenuItem createArquivoAbrirExemploMorfologia() {
         JMenuItem abrirExemploMorfologia = new JMenuItem("Exemplo morfologia");
         abrirExemploMorfologia.addActionListener(((e) -> {
@@ -262,6 +282,34 @@ public class PDI extends JFrame {
             mainPanel.updateOriginalImage(originalImage);
         }));
         return abrirExemploMorfologia;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem para execução da extração de características de quadrado
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploCaracteristicasQuadrado() {
+        JMenuItem abrirExemploQuadrado = new JMenuItem("Exemplo extração de características: Quadrado");
+        abrirExemploQuadrado.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/quadrado_preto.png"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploQuadrado;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem para execução da extração de características de círculos
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploCaracteristicasCirculos() {
+        JMenuItem abrirExemploCirculos = new JMenuItem("Exemplo extração de características: Círculos");
+        abrirExemploCirculos.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/circulos_preto.png"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploCirculos;
     }
 
     /**
@@ -795,6 +843,43 @@ public class PDI extends JFrame {
             }
         });
         return afinamentoHolt;
+    }
+    
+    /**
+     * Cria submenu para extração de características de um quadrado
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuCaracteristicasQuadrado() {
+        JMenuItem caracteristicasQuadrado = new JMenuItem("Características quadrado");
+        caracteristicasQuadrado.setMnemonic(KeyEvent.VK_Q);
+        caracteristicasQuadrado.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                int perimetro = 0;
+                int area = 0;
+                for (int x = 0; x < originalImage.getWidth(); x++) {
+                    for (int y = 0; y < originalImage.getHeight(); y++) {
+                        int pixelValue = originalImage.getPixels()[x][y];
+                        if (pixelValue == 0) {
+                            area++;
+                            if (x == 0 || y == 0 || x == originalImage.getWidth() - 1
+                                    || y == originalImage.getHeight() - 1
+                                    || originalImage.getPixels()[x][y - 1] == 255
+                                    || originalImage.getPixels()[x - 1][y] == 255
+                                    || originalImage.getPixels()[x + 1][y] == 255
+                                    || originalImage.getPixels()[x][y + 1] == 255) {
+                                // Se for canto deve contar 2x como parte do perímetro
+                                perimetro++;
+                            }
+                        }
+                    }
+                }
+                System.out.println("Perímetro: " + perimetro);
+                System.out.println("Área: " + area);
+                
+            }
+        });
+        return caracteristicasQuadrado;
     }
     
     /**
