@@ -4,6 +4,7 @@ import processes.Transformations;
 import commons.ImageStatistics;
 import commons.Image;
 import com.sun.glass.events.KeyEvent;
+import commons.ImageObject;
 import commons.Mediana;
 import commons.Moda;
 import filters.AverageFilter;
@@ -34,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
+import processes.BinaryLabeling;
 import processes.HoltProcess;
 
 /**
@@ -193,6 +195,7 @@ public class PDI extends JFrame {
         JMenu menuCaracteristicas = new JMenu("Extração de características");
         menuCaracteristicas.setMnemonic(KeyEvent.VK_E);
         menuCaracteristicas.add(createMenuCaracteristicasQuadrado());
+        menuCaracteristicas.add(createMenuCaracteristicasCirculos());
         return menuCaracteristicas;
     }
 
@@ -292,7 +295,7 @@ public class PDI extends JFrame {
     private JMenuItem createArquivoAbrirExemploCaracteristicasQuadrado() {
         JMenuItem abrirExemploQuadrado = new JMenuItem("Exemplo extração de características: Quadrado");
         abrirExemploQuadrado.addActionListener((ActionEvent e) -> {
-            loadImage(PDI.class.getResourceAsStream("/res/quadrado_preto.png"));
+            loadImage(PDI.class.getResourceAsStream("/res/quadrado.png"));
             mainPanel.updateOriginalImage(originalImage);
         });
         return abrirExemploQuadrado;
@@ -306,7 +309,7 @@ public class PDI extends JFrame {
     private JMenuItem createArquivoAbrirExemploCaracteristicasCirculos() {
         JMenuItem abrirExemploCirculos = new JMenuItem("Exemplo extração de características: Círculos");
         abrirExemploCirculos.addActionListener((ActionEvent e) -> {
-            loadImage(PDI.class.getResourceAsStream("/res/circulos_preto.png"));
+            loadImage(PDI.class.getResourceAsStream("/res/circulos.png"));
             mainPanel.updateOriginalImage(originalImage);
         });
         return abrirExemploCirculos;
@@ -855,13 +858,12 @@ public class PDI extends JFrame {
         caracteristicasQuadrado.setMnemonic(KeyEvent.VK_Q);
         caracteristicasQuadrado.addActionListener((ActionEvent e) -> {
             if (originalImage != null) {
-                int perimetro = 0;
-                int area = 0;
+                ImageObject quadrado = new ImageObject();
                 for (int x = 0; x < originalImage.getWidth(); x++) {
                     for (int y = 0; y < originalImage.getHeight(); y++) {
                         int pixelValue = originalImage.getPixels()[x][y];
                         if (pixelValue == 0) {
-                            area++;
+                            quadrado.setArea(quadrado.getArea() + 1);
                             if (x == 0 || y == 0 || x == originalImage.getWidth() - 1
                                     || y == originalImage.getHeight() - 1
                                     || originalImage.getPixels()[x][y - 1] == 255
@@ -869,17 +871,42 @@ public class PDI extends JFrame {
                                     || originalImage.getPixels()[x + 1][y] == 255
                                     || originalImage.getPixels()[x][y + 1] == 255) {
                                 // Se for canto deve contar 2x como parte do perímetro
-                                perimetro++;
+                                quadrado.setPerimetro(quadrado.getPerimetro() + 1);
                             }
                         }
                     }
                 }
-                System.out.println("Perímetro: " + perimetro);
-                System.out.println("Área: " + area);
-                
+                System.out.println("Perímetro: " + quadrado.getPerimetro());
+                System.out.println("Área: " + quadrado.getArea());
+
+                BinaryLabeling binary = new BinaryLabeling(originalImage);
+                binary.apply();
+                mainPanel.setModifiedImage(binary.getLabeledImage());
+                mainPanel.showModifiedImageInformations();
             }
         });
         return caracteristicasQuadrado;
+    }
+    
+    /**
+     * Cria submenu para extração de características de círculos
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuCaracteristicasCirculos() {
+        JMenuItem caracteristicasCirculos = new JMenuItem("Características círculos");
+        caracteristicasCirculos.setMnemonic(KeyEvent.VK_C);
+        caracteristicasCirculos.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+
+                BinaryLabeling binary = new BinaryLabeling(originalImage);
+                binary.apply();
+                mainPanel.setModifiedImage(binary.getLabeledImage());
+                mainPanel.showModifiedImageInformations();
+                
+            }
+        });
+        return caracteristicasCirculos;
     }
     
     /**
