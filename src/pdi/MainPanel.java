@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import processes.Botany;
 import processes.GeometricTransformations;
 import processes.ConvolutionFilter;
 
@@ -340,6 +341,20 @@ public class MainPanel extends JPanel {
         }), BorderLayout.CENTER);
         rightPanel.add(imageThresholdingPanel, BorderLayout.CENTER);
         rightPanel.add(thresholdingInformationPanel, BorderLayout.SOUTH);
+        revalidate();
+        repaint();
+    }
+    
+    /**
+     * Exibe informações da imagem botânica
+     */
+    public void showBotanyImageInformations() {
+        resetModifiedImagePanel();
+        ImageView modifiedImagePanel = new ImageView();
+        Botany botanyProcess = new Botany(originalImage);
+        modifiedImagePanel.updateImage(botanyProcess.applyProcesses());
+        rightPanel.add(modifiedImagePanel, BorderLayout.CENTER);
+        rightPanel.add(new BotanyInformationsView(botanyProcess.getTreatment()), BorderLayout.SOUTH);
         revalidate();
         repaint();
     }

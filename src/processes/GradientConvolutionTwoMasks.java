@@ -30,8 +30,13 @@ public class GradientConvolutionTwoMasks implements ConvolutionFilter {
     public Image apply(Image original, int threshold) {
         Image result = new Image(original.getHeight(), original.getWidth());
         result.setPixels(original.getPixels());
-        for (int x = 1; x < original.getWidth() -1; x++) {
-            for (int y = 1; y < original.getHeight() -1; y++) {
+        for (int x = 0; x < original.getWidth(); x++) {
+            for (int y = 0; y < original.getHeight(); y++) {
+                if (x == 0 || x == (original.getWidth() - 1)
+                        || y == 0 || y == (original.getHeight() - 1)) {
+                    result.setPixel(x, y, 0);
+                    continue;
+                }
                 double xGradient = 0;
                 double yGradient = 0;
                 // Percorre a matriz de convolução

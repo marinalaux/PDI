@@ -8,6 +8,7 @@ import commons.ImageObject;
 import commons.Mediana;
 import commons.Moda;
 import filters.AverageFilter;
+import filters.BrightnessContrastFilter;
 import filters.ClosureFilter;
 import filters.DilationFilter;
 import filters.ErosionFilter;
@@ -21,6 +22,7 @@ import filters.RobinsonFilter;
 import filters.SobelFilter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,6 +98,7 @@ public class PDI extends JFrame {
         menuBar.add(createMenuMorfologia());
         menuBar.add(createMenuAfinamento());
         menuBar.add(createMenuCaracteristicas());
+        menuBar.add(createMenuBotanica());
         return menuBar;
     }
 
@@ -198,6 +201,18 @@ public class PDI extends JFrame {
         menuCaracteristicas.add(createMenuCaracteristicasCirculos());
         return menuCaracteristicas;
     }
+    
+    /**
+     * Cria menu de primeiro nível para características botânicas
+     * 
+     * @return JMenu
+     */
+    private JMenu createMenuBotanica() {
+        JMenu menuBotanica = new JMenu("Botânica");
+        menuBotanica.setMnemonic(KeyEvent.VK_B);
+        menuBotanica.add(createMenuBotanicaFolha());
+        return menuBotanica;
+    }
 
     /**
      * Cria submenu para abrir a imagem
@@ -223,11 +238,19 @@ public class PDI extends JFrame {
         JMenu arquivoAbrirEspecial = new JMenu("Abrir especial");
         arquivoAbrirEspecial.setMnemonic(KeyEvent.VK_E);
         arquivoAbrirEspecial.add(createArquivoAbrirLena());
+        arquivoAbrirEspecial.addSeparator();
         arquivoAbrirEspecial.add(createArquivoAbrirEye());
         arquivoAbrirEspecial.add(createArquivoAbrirLandscape());
+        arquivoAbrirEspecial.addSeparator();
         arquivoAbrirEspecial.add(createArquivoAbrirExemploMorfologia());
+        arquivoAbrirEspecial.addSeparator();
         arquivoAbrirEspecial.add(createArquivoAbrirExemploCaracteristicasQuadrado());
         arquivoAbrirEspecial.add(createArquivoAbrirExemploCaracteristicasCirculos());
+        arquivoAbrirEspecial.addSeparator();
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploFolha1());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploFolha2());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploFolha3());
+        arquivoAbrirEspecial.add(createArquivoAbrirExemploFolha4());
         return arquivoAbrirEspecial;
     }
     
@@ -313,6 +336,62 @@ public class PDI extends JFrame {
             mainPanel.updateOriginalImage(originalImage);
         });
         return abrirExemploCirculos;
+    }
+    
+    /**
+     * Cria submenu para abrir imagem da folha 1
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploFolha1() {
+        JMenuItem abrirExemploFolha1 = new JMenuItem("Exemplo botânica: Folha 1");
+        abrirExemploFolha1.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/folha_1.PNG"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploFolha1;
+    }
+
+    /**
+     * Cria submenu para abrir imagem da folha 2
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploFolha2() {
+        JMenuItem abrirExemploFolha2 = new JMenuItem("Exemplo botânica: Folha 2");
+        abrirExemploFolha2.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/folha_2.PNG"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploFolha2;
+    }
+
+    /**
+     * Cria submenu para abrir imagem da folha 3
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploFolha3() {
+        JMenuItem abrirExemploFolha3 = new JMenuItem("Exemplo botânica: Folha 3");
+        abrirExemploFolha3.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/folha_3.PNG"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploFolha3;
+    }
+
+    /**
+     * Cria submenu para abrir imagem da folha 4
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createArquivoAbrirExemploFolha4() {
+        JMenuItem abrirExemploFolha4 = new JMenuItem("Exemplo botânica: Folha 4");
+        abrirExemploFolha4.addActionListener((ActionEvent e) -> {
+            loadImage(PDI.class.getResourceAsStream("/res/folha_4.PNG"));
+            mainPanel.updateOriginalImage(originalImage);
+        });
+        return abrirExemploFolha4;
     }
 
     /**
@@ -879,7 +958,7 @@ public class PDI extends JFrame {
                 System.out.println("Perímetro: " + quadrado.getPerimetro());
                 System.out.println("Área: " + quadrado.getArea());
 
-                BinaryLabeling binary = new BinaryLabeling(originalImage);
+                BinaryLabeling binary = new BinaryLabeling(originalImage, 255, 0);
                 binary.apply();
                 mainPanel.setModifiedImage(binary.getLabeledImage());
                 mainPanel.showModifiedImageInformations();
@@ -899,7 +978,7 @@ public class PDI extends JFrame {
         caracteristicasCirculos.addActionListener((ActionEvent e) -> {
             if (originalImage != null) {
 
-                BinaryLabeling binary = new BinaryLabeling(originalImage);
+                BinaryLabeling binary = new BinaryLabeling(originalImage, 255, 0);
                 binary.apply();
                 mainPanel.setModifiedImage(binary.getLabeledImage());
                 mainPanel.showModifiedImageInformations();
@@ -907,6 +986,21 @@ public class PDI extends JFrame {
             }
         });
         return caracteristicasCirculos;
+    }
+    
+    /**
+     * Cria submenu para extração de características de folhas
+     * 
+     * @return JMenuItem
+     */
+    private JMenuItem createMenuBotanicaFolha() {
+        JMenuItem menuBotanicaFolhas = new JMenuItem("Folhas");
+        menuBotanicaFolhas.addActionListener((ActionEvent e) -> {
+            if (originalImage != null) {
+                mainPanel.showBotanyImageInformations();
+            }
+        });
+        return menuBotanicaFolhas;
     }
     
     /**

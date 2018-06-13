@@ -13,6 +13,8 @@ public class ImageObject {
     private double circularidade;
     /** Cor do objeto */
     private int cor;
+    /** Quantidade de pixels do objeto */
+    private int qtdPixels;
     
     public int getPerimetro() {
         return perimetro;
@@ -44,6 +46,14 @@ public class ImageObject {
 
     public void setCor(int cor) {
         this.cor = cor;
+    }
+
+    public int getQtdPixels() {
+        return qtdPixels;
+    }
+
+    public void setQtdPixels(int qtdPixels) {
+        this.qtdPixels = qtdPixels;
     }
     
 }
