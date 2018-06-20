@@ -3,6 +3,7 @@ package processes;
 import commons.Image;
 import commons.ImageObject;
 import filters.BrightnessContrastFilter;
+import filters.ClosureFilter;
 import filters.DilationFilter;
 import filters.ErosionFilter;
 import filters.GaussFilter;
@@ -39,36 +40,41 @@ public class Botany {
      */
     public Image applyProcesses() {
         image = new GaussFilter().apply(image);
-        image = BrightnessContrastFilter.applyContrast(image, 1.8);
-        image = BrightnessContrastFilter.applyBrightness(image, -20);
+        image = new GaussFilter().apply(image);
+        image = BrightnessContrastFilter.applyContrast(image, 2.0);
+        image = BrightnessContrastFilter.applyBrightness(image, -30);
+        image = Threshold.apply(image, 100, 0);
         image = new DilationFilter().apply(image);
         image = new GaussFilter().apply(image);
         image = new DilationFilter().apply(image);
-        image = new DilationFilter().apply(image);
+        image = new GaussFilter().apply(image);
+        image = new ClosureFilter().apply(image);
         image = new GaussFilter().apply(image);
         image = new MarrAndHildrethFilter().apply(new GaussFilter().apply(image), 80);
         image = new GaussFilter().apply(image);
-        image = new ErosionFilter().apply(image);
-        image = new ErosionFilter().apply(image);
         image = new GaussFilter().apply(image);
         image = new ErosionFilter().apply(image);
         image = new GaussFilter().apply(image);
-        image = BrightnessContrastFilter.applyContrast(image, 3.0);
+        image = Threshold.apply(image, 100, 0);
         image = new OpeningFilter().apply(image);
+        image = new ErosionFilter().apply(image);
+        image = new DilationFilter().apply(image);
+        image = new OpeningFilter().apply(image);
+        image = Threshold.apply(image, 100, 0);
+        image = BrightnessContrastFilter.applyContrast(image, 5.0);
         image = new GaussFilter().apply(image);
+        image = new ErosionFilter().apply(image);
+        image = new OpeningFilter().apply(image);
+        image = new ErosionFilter().apply(image);
+        image = new ErosionFilter().apply(image);
         image = new DilationFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        image = BrightnessContrastFilter.applyContrast(image, 3.0);
-        image = new DilationFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        
+        image = new OpeningFilter().apply(image);
+
+
 //        BinaryLabeling binary = new BinaryLabeling(image, 0, 255, 155);
 //        binary.apply();
 //        image = binary.getLabeledImage();
 //        objects = binary.getObjects();
-        
-        System.out.println("Qtd obj: " + objects.size());
         
         return image;
     }
