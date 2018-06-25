@@ -32,48 +32,7 @@ public class Botany {
         this.image.setPixels(image.getPixels());
         this.objects = new ArrayList<>();
     }
-    
-    /**
-     * Aplica processos para extração das manchas de ferrugem
-     * 
-     * @return Imagem
-     */
-    public Image applyProcessesOld() {
-        image = new GaussFilter().apply(image);
-        image = BrightnessContrastFilter.applyContrast(image, 1.8);
-        image = BrightnessContrastFilter.applyBrightness(image, -20);
-        image = new DilationFilter().apply(image);
-        image = new GaussFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        image = new GaussFilter().apply(image);
-        image = new MarrAndHildrethFilter().apply(new GaussFilter().apply(image), 80);
-        image = new GaussFilter().apply(image);
-        image = new ErosionFilter().apply(image);
-        image = new ErosionFilter().apply(image);
-//        image = new GaussFilter().apply(image);
-//        image = new ErosionFilter().apply(image);
-//        image = new GaussFilter().apply(image);
-//        image = BrightnessContrastFilter.applyContrast(image, 3.0);
-        image = new OpeningFilter().apply(image);
-//        image = new GaussFilter().apply(image);
-        image = new DilationFilter().apply(image);
-        image = new OpeningFilter().apply(image);
-//        image = new DilationFilter().apply(image);
-//        image = BrightnessContrastFilter.applyContrast(image, 3.0);
-//        image = new DilationFilter().apply(image);
-//        image = new DilationFilter().apply(image);
-//        image = new DilationFilter().apply(image);
-
-
-//        BinaryLabeling binary = new BinaryLabeling(image, 0, 255, 155);
-//        binary.apply();
-//        image = binary.getLabeledImage();
-//        objects = binary.getObjects();
         
-        return image;
-    }
-    
     /**
      * Aplica processos para extração das manchas de ferrugem
      * 
